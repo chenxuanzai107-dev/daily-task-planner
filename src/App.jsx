@@ -83,7 +83,9 @@ export default function App() {
         </header>
 
         <div className="quote-card" style={{ background: theme.cardBg, boxShadow: theme.shadow }}>
-          <p className="quote-text" style={{ color: theme.quoteColor }}>{quote}</p>
+          <p className="quote-text" style={{ color: theme.quoteColor }}>{quote.en}</p>
+          <p className="quote-author" style={{ color: theme.textSecondary }}>— {quote.author}</p>
+          <p className="quote-zh" style={{ color: theme.textSecondary }}>{quote.zh}</p>
         </div>
 
         <div className="input-bar">

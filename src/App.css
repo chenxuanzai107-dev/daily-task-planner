@@ -69,6 +69,21 @@ body {
   font-weight: 400;
   font-style: italic;
   letter-spacing: 0.02em;
+  margin-bottom: 8px;
+}
+
+.quote-author {
+  font-size: 12px;
+  line-height: 1.6;
+  margin-bottom: 6px;
+  text-align: right;
+}
+
+.quote-zh {
+  font-size: 14px;
+  line-height: 1.7;
+  font-style: normal;
+  letter-spacing: 0.03em;
 }
 
 /* ---- Input Bar ---- */
