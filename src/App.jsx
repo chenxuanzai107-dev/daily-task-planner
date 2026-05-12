@@ -31,6 +31,14 @@ export default function App() {
   const { tasks, addTask, toggleTask, deleteTask, clearCompleted, clearAll } = useTasks();
   const [input, setInput] = useState('');
   const [tick, setTick] = useState(0);
+  const [pageViews, setPageViews] = useState(null);
+
+  useEffect(() => {
+    fetch('https://api.countapi.xyz/hit/daily-task-planner-ccz/visits')
+      .then((r) => r.json())
+      .then((data) => setPageViews(data.value))
+      .catch(() => {});
+  }, []);
 
   // Force re-render when day changes (Beijing midnight)
   const refresh = useCallback(() => setTick((t) => t + 1), []);
@@ -180,6 +188,11 @@ export default function App() {
         <footer className="credit">
           <p>Designed & Built by <span className="credit-name">CHENXUANZAI</span></p>
           <p className="credit-sub">Make every day count</p>
+          {pageViews !== null && (
+            <p className="credit-views">
+              &#128065; <span className="views-count">{pageViews.toLocaleString()}</span> visits
+            </p>
+          )}
         </footer>
       </div>
     </div>

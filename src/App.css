@@ -290,6 +290,18 @@ body {
   font-style: italic;
 }
 
+.credit .credit-views {
+  font-size: 11px;
+  color: #c0b8b8;
+  margin-top: 6px;
+  letter-spacing: 0.03em;
+}
+
+.credit .credit-views .views-count {
+  font-weight: 600;
+  color: #b0a0a0;
+}
+
 /* ---- Mobile: screens up to 480px ---- */
 @media (max-width: 480px) {
   .app {
