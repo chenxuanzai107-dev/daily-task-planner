@@ -1,8 +1,10 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import useTasks from './hooks/useTasks';
 import TaskItem from './components/TaskItem';
+import ProgressRing from './components/ProgressRing';
 import getDailyQuote from './data/quotes';
 import getDailyTheme from './data/themes';
+import getPenPalMessage from './data/penpal';
 import './App.css';
 
 function getBeijingNow() {
@@ -27,9 +29,12 @@ function msUntilBeijingMidnight() {
   return tomorrow - bj;
 }
 
+const PRIORITY_LABELS = { high: '高优先', medium: '中优先', low: '低优先' };
+
 export default function App() {
-  const { tasks, addTask, toggleTask, deleteTask, clearCompleted, clearAll } = useTasks();
+  const { tasks, addTask, toggleTask, deleteTask, updatePriority, clearCompleted, clearAll, allTasks } = useTasks();
   const [input, setInput] = useState('');
+  const [priority, setPriority] = useState('medium');
   const [tick, setTick] = useState(0);
   const [pageViews, setPageViews] = useState(null);
 
@@ -40,12 +45,11 @@ export default function App() {
       .catch(() => {});
   }, []);
 
-  // Force re-render when day changes (Beijing midnight)
   const refresh = useCallback(() => setTick((t) => t + 1), []);
 
   useEffect(() => {
     const delay = msUntilBeijingMidnight();
-    const timer = setTimeout(refresh, delay + 1000); // +1s safety margin
+    const timer = setTimeout(refresh, delay + 1000);
     return () => clearTimeout(timer);
   }, [tick, refresh]);
 
@@ -53,10 +57,11 @@ export default function App() {
   const dateStr = formatBeijingDate(beijingNow);
   const quote = getDailyQuote();
   const theme = getDailyTheme();
+  const penPalMsg = useMemo(() => getPenPalMessage(allTasks), [tick, allTasks]);
 
   const handleAdd = () => {
     if (input.trim()) {
-      addTask(input);
+      addTask(input, priority);
       setInput('');
     }
   };
@@ -71,15 +76,26 @@ export default function App() {
     }
   };
 
+  const handlePriorityChange = (id, newPriority) => {
+    updatePriority(id, newPriority);
+  };
+
   const pending = tasks.filter((t) => !t.done);
   const completed = tasks.filter((t) => t.done);
+  const totalDone = tasks.filter((t) => t.done).length;
+  const totalAll = tasks.length;
 
   return (
     <div className="app-wrapper" style={{ background: theme.bg }}>
       <div className="app">
         <header className="header">
           <p className="date">{dateStr}</p>
-          <p className="theme-tag">{theme.name}</p>
+          <div className="header-row">
+            <p className="theme-tag">{theme.name}</p>
+            {totalAll > 0 && (
+              <ProgressRing done={totalDone} total={totalAll} accent={theme.accent} />
+            )}
+          </div>
         </header>
 
         <div className="quote-card" style={{ background: theme.cardBg, boxShadow: theme.shadow }}>
@@ -87,6 +103,17 @@ export default function App() {
           <p className="quote-author" style={{ color: theme.textSecondary }}>— {quote.author}</p>
           <p className="quote-zh" style={{ color: theme.textSecondary }}>{quote.zh}</p>
         </div>
+
+        {penPalMsg && (
+          <div className="penpal-card" style={{ background: theme.cardBg, boxShadow: theme.shadow }}>
+            <p className="penpal-icon">&#9993;</p>
+            <p className="penpal-text" style={{ color: theme.textSecondary }}>
+              {penPalMsg.split('\n\n').map((part, i) => (
+                <span key={i}>{part}<br /><br /></span>
+              ))}
+            </p>
+          </div>
+        )}
 
         <div className="input-bar">
           <input
@@ -101,6 +128,19 @@ export default function App() {
               color: theme.text,
             }}
           />
+          <div className="priority-selector">
+            {['high', 'medium', 'low'].map((p) => (
+              <button
+                key={p}
+                type="button"
+                className={`priority-opt priority-${p} ${priority === p ? 'active' : ''}`}
+                onClick={() => setPriority(p)}
+                title={PRIORITY_LABELS[p]}
+              >
+                {PRIORITY_LABELS[p][0]}
+              </button>
+            ))}
+          </div>
           <button
             onClick={handleAdd}
             style={{ background: theme.accent }}
@@ -126,17 +166,16 @@ export default function App() {
               待完成 · {pending.length}
             </h2>
             <ul className="task-list">
-              {tasks
-                .filter((t) => !t.done)
-                .map((t) => (
-                  <TaskItem
-                    key={t.id}
-                    task={t}
-                    onToggle={toggleTask}
-                    onDelete={deleteTask}
-                    theme={theme}
-                  />
-                ))}
+              {pending.map((t) => (
+                <TaskItem
+                  key={t.id}
+                  task={t}
+                  onToggle={toggleTask}
+                  onDelete={deleteTask}
+                  onPriorityChange={handlePriorityChange}
+                  theme={theme}
+                />
+              ))}
             </ul>
           </section>
         )}
@@ -147,17 +186,16 @@ export default function App() {
               已完成 · {completed.length}
             </h2>
             <ul className="task-list">
-              {tasks
-                .filter((t) => t.done)
-                .map((t) => (
-                  <TaskItem
-                    key={t.id}
-                    task={t}
-                    onToggle={toggleTask}
-                    onDelete={deleteTask}
-                    theme={theme}
-                  />
-                ))}
+              {completed.map((t) => (
+                <TaskItem
+                  key={t.id}
+                  task={t}
+                  onToggle={toggleTask}
+                  onDelete={deleteTask}
+                  onPriorityChange={handlePriorityChange}
+                  theme={theme}
+                />
+              ))}
             </ul>
           </section>
         )}

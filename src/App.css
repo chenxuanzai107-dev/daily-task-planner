@@ -40,6 +40,14 @@ body {
   margin-bottom: 4px;
 }
 
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
 .header .theme-tag {
   display: inline-block;
   font-size: 11px;
@@ -84,6 +92,143 @@ body {
   line-height: 1.7;
   font-style: normal;
   letter-spacing: 0.03em;
+}
+
+/* ---- Pen Pal Card ---- */
+.penpal-card {
+  text-align: left;
+  padding: 18px 20px;
+  border-radius: 16px;
+  margin-bottom: 24px;
+  backdrop-filter: blur(10px);
+  transition: all 0.6s ease;
+  position: relative;
+}
+
+.penpal-icon {
+  font-size: 18px;
+  margin-bottom: 8px;
+  opacity: 0.5;
+}
+
+.penpal-text {
+  font-size: 13px;
+  line-height: 1.8;
+  letter-spacing: 0.03em;
+}
+
+/* ---- Progress Ring ---- */
+.progress-ring-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.progress-ring-fill {
+  transform: rotate(-90deg);
+  transform-origin: center;
+}
+
+.sparkle-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  pointer-events: none;
+}
+
+.sparkle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color);
+  animation: sparkleBurst 1.2s var(--delay) ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes sparkleBurst {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(var(--angle)) translateY(-40px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(var(--angle)) translateY(-70px) scale(0.3);
+  }
+}
+
+/* ---- Priority ---- */
+.priority-dot {
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid #d0b860;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.priority-dot.priority-high {
+  background: #e07070;
+  border-color: #e07070;
+  box-shadow: 0 0 6px rgba(224, 112, 112, 0.3);
+}
+
+.priority-dot.priority-medium {
+  background: #d0b860;
+  border-color: #d0b860;
+}
+
+.priority-dot.priority-low {
+  background: #90b090;
+  border-color: #90b090;
+}
+
+.task-item.done .priority-dot {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.priority-selector {
+  display: flex;
+  gap: 3px;
+}
+
+.priority-opt {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  background: rgba(255, 255, 255, 0.5);
+  color: #999;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.priority-opt.priority-high.active {
+  border-color: #e07070;
+  color: #e07070;
+  background: rgba(224, 112, 112, 0.08);
+}
+
+.priority-opt.priority-medium.active {
+  border-color: #d0b860;
+  color: #b89830;
+  background: rgba(208, 184, 96, 0.08);
+}
+
+.priority-opt.priority-low.active {
+  border-color: #90b090;
+  color: #709070;
+  background: rgba(144, 176, 144, 0.08);
 }
 
 /* ---- Input Bar ---- */
