@@ -93,21 +93,29 @@ export default function App() {
           <div className="header-row">
             <p className="theme-tag">{theme.name}</p>
             {totalAll > 0 && (
-              <ProgressRing done={totalDone} total={totalAll} accent={theme.accent} />
+              <ProgressRing
+                done={totalDone}
+                total={totalAll}
+                accent={theme.accent}
+                textSecondary={theme.textSecondary}
+              />
             )}
           </div>
         </header>
 
-        <div className="quote-card" style={{ background: theme.cardBg, boxShadow: theme.shadow }}>
-          <p className="quote-text" style={{ color: theme.quoteColor }}>{quote.en}</p>
+        <div
+          className="quote-card"
+          style={{ borderColor: theme.border }}
+        >
+          <p className="quote-text" style={{ color: theme.accent }}>{quote.en}</p>
           <p className="quote-author" style={{ color: theme.textSecondary }}>— {quote.author}</p>
-          <p className="quote-zh" style={{ color: theme.textSecondary }}>{quote.zh}</p>
+          <p className="quote-zh">{quote.zh}</p>
         </div>
 
         {penPalMsg && (
-          <div className="penpal-card" style={{ background: theme.cardBg, boxShadow: theme.shadow }}>
+          <div className="penpal-card" style={{ borderColor: theme.accent }}>
             <p className="penpal-icon">&#9993;</p>
-            <p className="penpal-text" style={{ color: theme.textSecondary }}>
+            <p className="penpal-text">
               {penPalMsg.split('\n\n').map((part, i) => (
                 <span key={i}>{part}<br /><br /></span>
               ))}
@@ -123,8 +131,7 @@ export default function App() {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             style={{
-              background: theme.inputBg,
-              borderColor: theme.inputBorder,
+              borderBottomColor: theme.border,
               color: theme.text,
             }}
           />
@@ -144,8 +151,6 @@ export default function App() {
           <button
             onClick={handleAdd}
             style={{ background: theme.accent }}
-            onMouseEnter={(e) => (e.target.style.background = theme.accentHover)}
-            onMouseLeave={(e) => (e.target.style.background = theme.accent)}
           >
             添加
           </button>
@@ -154,7 +159,7 @@ export default function App() {
         {tasks.length === 0 && (
           <div className="empty-state">
             <p className="empty-icon">&#9776;</p>
-            <p className="empty" style={{ color: theme.textSecondary }}>
+            <p className="empty" style={{ color: theme.textMuted }}>
               新的一天，从这里开始
             </p>
           </div>
@@ -182,7 +187,7 @@ export default function App() {
 
         {completed.length > 0 && (
           <section>
-            <h2 className="section-title" style={{ color: theme.textSecondary }}>
+            <h2 className="section-title" style={{ color: theme.textMuted }}>
               已完成 · {completed.length}
             </h2>
             <ul className="task-list">
@@ -205,20 +210,14 @@ export default function App() {
             <button
               onClick={clearCompleted}
               disabled={completed.length === 0}
-              style={{
-                borderColor: theme.inputBorder,
-                color: theme.textSecondary,
-              }}
+              style={{ color: theme.textSecondary }}
             >
               清除已完成
             </button>
             <button
               className="danger"
               onClick={handleClearAll}
-              style={{
-                borderColor: theme.inputBorder,
-                color: theme.accent,
-              }}
+              style={{ color: theme.textSecondary }}
             >
               清空全部
             </button>

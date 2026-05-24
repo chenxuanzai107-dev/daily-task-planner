@@ -10,30 +10,23 @@ export default function TaskItem({ task, onToggle, onDelete, theme, onPriorityCh
   };
 
   return (
-    <li
-      className={`task-item ${task.done ? 'done' : ''}`}
-      style={{
-        background: theme.cardBg,
-        boxShadow: theme.shadow,
-      }}
-    >
+    <li className={`task-item ${task.done ? 'done' : ''}`}>
+      <span
+        className="task-accent-bar"
+        style={{ background: task.done ? theme.textMuted : theme.accent }}
+      />
       <input
         type="checkbox"
         checked={task.done}
         onChange={() => onToggle(task.id)}
-        style={{ accentColor: theme.checkboxAccent }}
+        style={{ accentColor: theme.accent }}
       />
       <span
         className={`priority-dot priority-${task.priority || 'medium'}`}
         onClick={cyclePriority}
         title={`优先级：${PRIORITY_LABELS[task.priority || 'medium']}（点击切换）`}
-        style={{
-          borderColor: task.priority === 'high' ? '#e07070' : task.priority === 'low' ? '#90b090' : '#d0b860',
-        }}
       />
-      <span className="task-text" style={{ color: task.done ? '#bbb' : theme.text }}>
-        {task.text}
-      </span>
+      <span className="task-text">{task.text}</span>
       <button className="delete-btn" onClick={() => onDelete(task.id)}>
         ✕
       </button>
